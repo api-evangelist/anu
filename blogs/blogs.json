@@ -1,0 +1,14 @@
+{
+  "repo": "anu",
+  "feeds": [
+    {
+      "source": "https://www.anu.edu.au/news",
+      "feed_url": "https://www.anu.edu.au/news",
+      "title": "ANU News",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-06-03T00:00:00Z"
+}

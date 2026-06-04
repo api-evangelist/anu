@@ -1,0 +1,55 @@
+{
+  "@context": {
+    "schema": "https://schema.org/",
+    "anu": "https://www.anu.edu.au/ns#",
+    "name": "schema:name",
+    "url": "schema:url",
+    "description": "schema:description",
+    "sameAs": "schema:sameAs",
+    "foundingLocation": "schema:foundingLocation",
+    "api": {
+      "@id": "anu:api",
+      "@container": "@set"
+    },
+    "apiName": "schema:name",
+    "humanURL": {
+      "@id": "schema:url",
+      "@type": "@id"
+    },
+    "baseURL": {
+      "@id": "anu:baseURL",
+      "@type": "@id"
+    },
+    "tags": {
+      "@id": "schema:keywords",
+      "@container": "@set"
+    }
+  },
+  "@type": "schema:CollegeOrUniversity",
+  "@id": "https://www.anu.edu.au/",
+  "name": "Australian National University",
+  "url": "https://www.anu.edu.au/",
+  "description": "Public research university in Canberra, Australia. Its public API footprint includes the QRNG@ANU quantum random numbers service and an OAI-PMH metadata endpoint for the ANU Open Research institutional repository.",
+  "sameAs": [
+    "https://github.com/AustralianNationalUniversity",
+    "https://www.linkedin.com/school/the-australian-national-university/"
+  ],
+  "api": [
+    {
+      "@type": "schema:WebAPI",
+      "apiName": "QRNG@ANU Quantum Random Numbers API",
+      "description": "Public API serving live quantum random numbers (uint8, uint16, hex16 arrays of length 1-1024).",
+      "humanURL": "https://qrng.anu.edu.au/contact/api-documentation/",
+      "baseURL": "https://qrng.anu.edu.au/API/jsonI.php",
+      "tags": ["Quantum", "Random Numbers", "Research", "JSON"]
+    },
+    {
+      "@type": "schema:WebAPI",
+      "apiName": "ANU Open Research OAI-PMH",
+      "description": "OAI-PMH v2.0 endpoint exposing DSpace institutional repository metadata for harvesting and discovery.",
+      "humanURL": "https://openresearch.anu.edu.au/open-research-collections",
+      "baseURL": "https://openresearch-repository.anu.edu.au/server/oai/request",
+      "tags": ["OAI-PMH", "Institutional Repository", "Open Access", "Research", "DSpace", "Metadata"]
+    }
+  ]
+}
