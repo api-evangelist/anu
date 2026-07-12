@@ -59,6 +59,8 @@ apis:
       - type: Documentation
         url: https://openresearch.anu.edu.au/open-research-collections
 common:
+  - type: DomainSecurity
+    url: security/anu-domain-security.yml
   - type: Website
     url: https://www.anu.edu.au/
   - type: GitHub
