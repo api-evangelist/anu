@@ -1,84 +1,345 @@
----
 aid: anu
 name: Australian National University
+x-type: university
+x-category: Public Research University
 description: >-
-  The Australian National University (ANU) is a public research university in
-  Canberra, ranked #28 in the QS World University Rankings 2025 and consistently
-  among Australia's leading institutions. ANU's public developer/API footprint is
-  modest and research-driven rather than centered on a single institutional
-  developer portal. The most prominent public API is QRNG@ANU (ANU Quantum
-  Numbers), which serves live quantum random numbers over HTTP. ANU also exposes
-  its Open Research institutional repository metadata via a standard OAI-PMH
-  endpoint. Most administrative systems (timetabling, programs and courses,
-  student services) are gated or community-scraped rather than offered as
-  documented public APIs.
+  The Australian National University (ANU) is a public research university in Canberra and a
+  member of the Group of Eight, ranked #27 in the QS World University Rankings order used by
+  this cohort. Like almost every university, ANU is a federation of buyers rather than an API
+  producer: it operates no central developer portal, no institutional API gateway
+  (api.anu.edu.au and developer.anu.edu.au do not resolve), and publishes no OpenAPI for
+  anything. What it does operate is small, real and genuinely its own — the ANU Quantum
+  Numbers (AQN) service serving live quantum random numbers from the ANU Quantum Optics
+  group, a deprecated predecessor endpoint at qrng.anu.edu.au throttled to one request per
+  minute, a self-hosted DSpace 7.6.7 institutional repository exposing a conformant OAI-PMH
+  2.0 interface across twelve metadata formats plus a HAL+JSON REST API, and a Shibboleth
+  identity provider registered in the Australian Access Federation and interfederated through
+  eduGAIN. ANU is a DataCite member in its own right, holding DOI prefix 10.25911 with 25,559
+  registered DOIs. Its research information portal, by contrast, is an Elsevier Pure tenancy
+  (researchportalplus.anu.edu.au CNAMEs to elsevierpure.com) — ANU's data on Elsevier's
+  contract, recorded here as a tenant relationship and deliberately not credited as ANU
+  engineering. Course, timetable and student systems are gated; the widely used ANU timetable
+  tool is student-built by the Computer Science Students' Association on a non-ANU domain and
+  is not endorsed on ANU's own timetabling pages.
 type: Index
 accessModel:
   pricing: free
-  onboarding: unknown
+  onboarding: self-serve
   trial: false
-  try_now: false
-  public: false
-  label: Free
-  confidence: medium
+  try_now: true
+  public: true
+  label: Free · Self-serve API key
+  confidence: high
   source:
+  - authentication
   - plans
-  generated: '2026-07-22'
-  method: derived
+  - rate-limits
+  generated: '2026-08-19'
+  method: probed
 position: Consumer
 access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/anu.png
 url: https://raw.githubusercontent.com/api-evangelist/anu/refs/heads/main/apis.yml
 tags:
-  - Education
-  - Higher Education
   - University
+  - Higher Education
+  - Education
   - Research
   - Australia
-  - Open Data
+  - Group of Eight
+  - Research Repository
+  - Identity Federation
+  - Open Access
   - Quantum
+  - Random Numbers
+  - OAI-PMH
 created: '2026-06-03'
-modified: '2026-06-03'
+modified: '2026-08-19'
 specificationVersion: '0.23'
+x-coverage:
+  state: covered
+  reason: institution_operated_surfaces_verified
+  detail: >-
+    Five institution-operated surfaces and one tenant relationship were settled by live probe
+    on 2026-08-19, before anything was saved. The operator axis is the whole finding here:
+    ANU's research portal is an Elsevier Pure tenancy and is recorded as `tenant`, never as an
+    ANU contract. The surfaces that ARE ANU's are small — two quantum RNG endpoints (one
+    deprecated), an OAI-PMH provider, a DSpace REST API and a SAML identity provider — and
+    none of them ships an OpenAPI, so every spec in openapi/ is marked `derived` or `probed`
+    and attributed to API Evangelist, not to ANU. Deliberate exclusions, each with a reason:
+    NCI (nci.org.au) is a national facility ANU collaborates in rather than operates, so its
+    HPC surfaces are not claimed here; timetable.cssa.club is a student-built scrape on a
+    non-institutional domain with no endorsement found on ANU's own timetabling pages, so it
+    is not credited even as a tenant; Wattle (Moodle) and the library discovery layer are
+    behind authentication and are cited only as conformance evidence, not listed as consumable
+    APIs. Absences confirmed by negative probe rather than assumed: no developer portal, no
+    API gateway, no OIDC discovery, no llms.txt, no security.txt, no status page, no changelog.
+  generated: '2026-08-19'
+  method: probed
+  evidence:
+    - url: https://api.quantumnumbers.anu.edu.au/?length=4&type=uint8
+      status: 403
+      note: Live AWS gateway, rejects without x-api-key. Institution-operated surface confirmed.
+    - url: https://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8
+      status: 200
+      note: Returned {"type":"uint8","length":4,"data":[74,205,98,159],"success":true}.
+    - url: https://openresearch-repository.anu.edu.au/server/oai/request?verb=Identify
+      status: 200
+      note: OAI-PMH 2.0, repositoryName "Open Research", 12 metadata formats.
+    - url: https://openresearch-repository.anu.edu.au/server/api
+      status: 200
+      note: application/hal+json, dspaceVersion "DSpace 7.6.7", self-hosted on ANU IP 130.56.67.40.
+    - url: https://idp2.anu.edu.au/idp/shibboleth
+      status: 200
+      note: SAML 2.0 IdP metadata, entityID https://idp2.anu.edu.au/idp/shibboleth, scope anu.edu.au.
+    - url: https://md.aaf.edu.au/aaf-metadata.xml
+      status: 200
+      note: Three ANU entityIDs present in the Australian Access Federation aggregate.
+    - url: https://researchportalplus.anu.edu.au/
+      status: 200
+      note: 'TENANT. CNAME anu2-portal.elsevierpure.com; response header x-product: Pure Portal.'
+    - url: https://wattlecourses.anu.edu.au/mod/lti/certs.php
+      status: 200
+      note: Live LTI 1.3 JWKS on ANU's self-hosted Moodle.
+    - url: https://api.datacite.org/prefixes/10.25911
+      status: 200
+      note: ANU DataCite provider `anu`, client `anu.repo`, 25,559 DOIs.
+    - url: https://api.anu.edu.au/
+      status: 000
+      note: Negative probe. No central API gateway; host does not resolve.
+    - url: https://developer.anu.edu.au/
+      status: 000
+      note: Negative probe. No developer portal; host does not resolve.
+    - url: https://www.anu.edu.au/llms.txt
+      status: 404
+      note: Negative probe. No agent-directed content policy.
+    - url: https://www.anu.edu.au/.well-known/security.txt
+      status: 404
+      note: Negative probe. No RFC 9116 security contact.
+    - url: https://www.anu.edu.au/.well-known/openid-configuration
+      status: 404
+      note: Negative probe. No OIDC discovery document.
+    - url: https://services.anu.edu.au/information-technology/it-service-status
+      status: 404
+      note: Negative probe. No status page found on the IT services portal.
 apis:
-  - aid: anu:qrng
-    name: QRNG@ANU Quantum Random Numbers API
+  - aid: anu:quantum-numbers
+    name: ANU Quantum Numbers (AQN) API
     description: >-
-      Public API serving live quantum random numbers generated by ANU's quantum
-      optics research group. The legacy JSON endpoint returns arrays of uint8,
-      uint16, or hex16 values (array length 1-1024) and requires no signup. A
-      newer AWS-hosted service at quantumnumbers.anu.edu.au offers the same data
-      with a free registered API key.
+      ANU's current quantum random number service, operated by the ANU Quantum Optics group on
+      ANU's own AWS account under ANU's own domain. Returns arrays of uint8, uint16, hex8 or
+      hex16 values, length 1-1024, with a block-size parameter for the hexadecimal types. A
+      free API key is issued self-serve and sent as the x-api-key header; the gateway returns
+      403 {"message":"Forbidden"} without one. ANU publishes no OpenAPI — the specification
+      pointed at below is derived by API Evangelist from ANU's own documented parameter table
+      and call form.
+    humanURL: https://quantumnumbers.anu.edu.au/documentation
+    baseURL: https://api.quantumnumbers.anu.edu.au
+    tags: [ Quantum, Random Numbers, Research, JSON ]
+    x-operator: institution
+    x-operator-evidence: >-
+      api.quantumnumbers.anu.edu.au is under anu.edu.au; documentation, self-serve signup and
+      the contact address qrng@anu.edu.au are all ANU's. No vendor branding anywhere on the
+      surface.
+    properties:
+      - type: Documentation
+        url: https://quantumnumbers.anu.edu.au/documentation
+      - type: Signup
+        url: https://quantumnumbers.anu.edu.au/
+      - type: OpenAPI
+        url: openapi/anu-quantum-numbers-openapi.yml
+      - type: JSONSchema
+        url: json-schema/anu-quantum-numbers-response-schema.json
+      - type: Examples
+        url: examples/anu-quantum-numbers-hex16-example.json
+      - type: Authentication
+        url: authentication/anu-authentication.yml
+  - aid: anu:qrng-legacy
+    name: QRNG@ANU Legacy JSON API
+    description: >-
+      The original ANU quantum random number endpoint, served from ANU's own web host. No
+      authentication, and throttled to one request per minute. ANU has published a deprecation
+      notice on the documentation page — "The old service will be scaled back and eventually
+      retired" — but names no sunset date and emits no Deprecation or Sunset header. The
+      throttle is signalled with HTTP 200 and a plain-text sentence rather than a 429, so
+      clients must branch on Content-Type, not status code.
     humanURL: https://qrng.anu.edu.au/contact/api-documentation/
     baseURL: https://qrng.anu.edu.au/API/jsonI.php
-    tags: [ Quantum, Random Numbers, Research, JSON ]
+    tags: [ Quantum, Random Numbers, Deprecated, JSON ]
+    x-operator: institution
+    x-operator-evidence: qrng.anu.edu.au resolves to 150.203.48.55, inside ANU's own address space.
+    x-lifecycle: deprecated
     properties:
       - type: Documentation
         url: https://qrng.anu.edu.au/contact/api-documentation/
-      - type: Signup
-        url: https://quantumnumbers.anu.edu.au/
+      - type: OpenAPI
+        url: openapi/anu-qrng-legacy-openapi.yml
+      - type: Examples
+        url: examples/anu-qrng-legacy-uint8-example.json
+      - type: Deprecation
+        url: lifecycle/anu-lifecycle.yml
   - aid: anu:openresearch-oai
     name: ANU Open Research OAI-PMH
     description: >-
-      OAI-PMH (Protocol for Metadata Harvesting) v2.0 endpoint for ANU's Open
-      Research institutional repository (DSpace), exposing metadata for journal
-      articles, theses, books, conference papers, and other open access scholarly
-      outputs for harvesting and discovery.
+      OAI-PMH 2.0 metadata harvesting interface for ANU's Open Research institutional
+      repository. Confirmed live: repositoryName "Open Research", repositoryIdentifier
+      openresearch-repository.anu.edu.au, earliest datestamp 2004-01-01, twelve metadata
+      formats (oai_dc, qdc, mods, mets, didl, ore, rdf, marc, xoai, dim, etdms, uketd_dc).
+      Records carry ORCID identifiers and DOIs under ANU's own DataCite prefix 10.25911. The
+      repository software is open-source DSpace 7.6.7, but ANU self-hosts the instance on ANU
+      infrastructure and the protocol is an open community standard — this is not a SaaS
+      tenancy, and no other institution's records are served here.
     humanURL: https://openresearch.anu.edu.au/open-research-collections
     baseURL: https://openresearch-repository.anu.edu.au/server/oai/request
     tags: [ OAI-PMH, Institutional Repository, Open Access, Research, DSpace, Metadata ]
+    x-operator: institution
+    x-operator-evidence: >-
+      openresearch-repository.anu.edu.au CNAMEs to dspace-prod.anu.edu.au at 130.56.67.40,
+      ANU address space. Identify adminEmail is an anu.edu.au address.
     properties:
       - type: Documentation
         url: https://openresearch.anu.edu.au/open-research-collections
+      - type: OpenAPI
+        url: openapi/anu-open-research-oai-pmh-openapi.yml
+      - type: Examples
+        url: examples/anu-open-research-oai-identify-example.xml
+      - type: Conformance
+        url: conformance/anu-conformance.yml
+  - aid: anu:openresearch-rest
+    name: ANU Open Research DSpace REST API
+    description: >-
+      The HAL+JSON REST API of ANU's self-hosted DSpace 7.6.7 repository, reachable anonymously
+      at /server/api for the root and discovery resources; /server/api/core/items returns 401,
+      so the surface is genuinely access-controlled rather than uniformly open. Recorded as an
+      ANU-operated surface because ANU runs the instance on its own infrastructure, but no
+      specification is saved for it: the contract shape is DSpace's upstream design, not ANU
+      engineering, and saving a generic DSpace spec under an institution's slug is precisely
+      the misattribution this profile exists to avoid.
+    humanURL: https://openresearch-repository.anu.edu.au/
+    baseURL: https://openresearch-repository.anu.edu.au/server/api
+    tags: [ Repository, REST, HAL, DSpace, Research ]
+    x-operator: institution
+    x-operator-evidence: >-
+      Self-hosted open-source software on ANU infrastructure under ANU's domain. Contract
+      design is upstream DSpace's; no spec saved here for that reason.
+    properties:
+      - type: Documentation
+        url: https://openresearch-repository.anu.edu.au/server/api
+  - aid: anu:identity-federation
+    name: ANU Shibboleth Identity Provider (SAML 2.0 metadata)
+    description: >-
+      ANU's institutional identity provider, publishing machine-readable SAML 2.0 metadata at
+      a stable URL. entityID https://idp2.anu.edu.au/idp/shibboleth, shibmd:Scope anu.edu.au,
+      OrganizationDisplayName "Australian National University", with SSO endpoints for
+      HTTP-POST, HTTP-Redirect and SOAP/ECP bindings plus a SOAP artifact resolution service
+      and an attribute authority. Registered in the Australian Access Federation aggregate
+      (359 entities) alongside two ANU service providers, wattlecourses.anu.edu.au and
+      mdl-stage.anu.edu.au, and interfederated internationally through eduGAIN. This is
+      institution-operated by definition and is the most consequential machine-readable surface
+      ANU runs — it is also the class of surface that is almost never catalogued.
+    humanURL: https://services.anu.edu.au/information-technology
+    baseURL: https://idp2.anu.edu.au/idp/shibboleth
+    tags: [ Identity Federation, SAML, Shibboleth, AAF, eduGAIN, Single Sign-On ]
+    x-operator: institution
+    x-operator-evidence: >-
+      Metadata is served from an anu.edu.au host and self-asserts ANU as the organization.
+      Present in the AAF federation aggregate under ANU's own entityID.
+    x-developer-usable: false
+    x-developer-note: >-
+      An end-user login federation, not a developer authorization surface. There is no client
+      registration path, no token endpoint and no consent screen an outside developer could
+      integrate against.
+    properties:
+      - type: Examples
+        url: examples/anu-idp-saml-entity-descriptor-example.xml
+      - type: Conformance
+        url: conformance/anu-conformance.yml
+      - type: Federation
+        url: https://md.aaf.edu.au/aaf-metadata.xml
+  - aid: anu:research-portal-pure
+    name: ANU Research Portal Plus (Elsevier Pure) — TENANT
+    description: >-
+      ANU's research information portal and public researcher/output profiles, running on
+      Elsevier Pure. This is a genuine institutional fact and one of the few programmable
+      research surfaces ANU has, so the relationship is recorded — but it is recorded as a
+      TENANCY, not as an ANU API. The data is ANU's; the contract, the API design, the Pure
+      Web Service and the Fingerprint Engine are Elsevier's. No Pure specification is saved in
+      this repository and none of Elsevier's engineering is scored as ANU's. Probed: the
+      conventional Pure web-service path /ws/api returns 404 on this deployment, so no
+      publicly reachable Pure API is exposed here even for the tenant.
+    humanURL: https://researchportalplus.anu.edu.au/
+    baseURL: https://researchportalplus.anu.edu.au/
+    tags: [ Research Information, Elsevier Pure, Tenant, Research Outputs ]
+    x-operator: tenant
+    x-operator-evidence: >-
+      researchportalplus.anu.edu.au CNAMEs to anu2-portal.elsevierpure.com ->
+      apac.prod.elsevierpure.com. Response header "x-product: Pure Portal". Page markup cites
+      Elsevier Fingerprint Engine and elsevier.responsibledisclosure.com.
+    x-vendor: Elsevier Pure
+    properties:
+      - type: Website
+        url: https://researchportalplus.anu.edu.au/
 common:
-  - type: DomainSecurity
-    url: security/anu-domain-security.yml
   - type: Website
     url: https://www.anu.edu.au/
+  - type: APIReference
+    url: https://quantumnumbers.anu.edu.au/documentation
+  - type: Documentation
+    url: https://qrng.anu.edu.au/contact/api-documentation/
   - type: GitHub
     url: https://github.com/AustralianNationalUniversity
+  - type: GitHubOrganization
+    url: https://github.com/ANUcybernetics
   - type: LinkedIn
     url: https://www.linkedin.com/school/the-australian-national-university/
+  - type: TermsOfService
+    url: https://www.anu.edu.au/disclaimer
+  - type: PrivacyPolicy
+    url: https://www.anu.edu.au/privacy
+  - type: Copyright
+    url: https://www.anu.edu.au/copyright
+  - type: Support
+    url: https://services.anu.edu.au/information-technology
+  - type: Blog
+    url: https://www.anu.edu.au/news
+  - type: ResearchRepository
+    url: https://openresearch.anu.edu.au/
+  - type: OpenData
+    url: https://datacommons.anu.edu.au/DataCommons/
+  - type: CourseCatalog
+    url: https://programsandcourses.anu.edu.au/
+  - type: IdentityFederation
+    url: https://idp2.anu.edu.au/idp/shibboleth
+  - type: AIPolicy
+    url: https://www.anu.edu.au/privacy/training-and-resources/generative-ai-and-data-governance
+  - type: AITooling
+    url: https://libguides.anu.edu.au/generative-ai
+  - type: Policies
+    url: https://policies.anu.edu.au/
+  - type: OpenAPI
+    url: openapi/anu-quantum-numbers-openapi.yml
+  - type: JSONSchema
+    url: json-schema/anu-quantum-numbers-response-schema.json
+  - type: Examples
+    url: examples/anu-qrng-legacy-uint8-example.json
+  - type: Rules
+    url: rules/anu-rules.yml
+  - type: Vocabulary
+    url: vocabulary/anu-vocabulary.yml
+  - type: JSONLD
+    url: json-ld/anu-context.jsonld
+  - type: Authentication
+    url: authentication/anu-authentication.yml
+  - type: Scopes
+    url: scopes/anu-scopes.yml
+  - type: Errors
+    url: errors/anu-problem-types.yml
+  - type: Conformance
+    url: conformance/anu-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/anu-lifecycle.yml
+  - type: DomainSecurity
+    url: security/anu-domain-security.yml
   - type: Plans
     url: plans/anu-plans-pricing.yml
   - type: RateLimits
