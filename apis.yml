@@ -22,6 +22,18 @@ description: >-
   tool is student-built by the Computer Science Students' Association on a non-ANU domain and
   is not endorsed on ANU's own timetabling pages.
 type: Index
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: free
   onboarding: self-serve
