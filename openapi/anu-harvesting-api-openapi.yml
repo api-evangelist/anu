@@ -1,0 +1,124 @@
+openapi: 3.2.0
+info:
+  title: ANU Open Research OAI-PMH Harvesting API
+  version: '2.0'
+  summary: OAI-PMH 2.0 metadata harvesting endpoint for ANU's Open Research institutional repository.
+  description: 'ANU operates its institutional repository, Open Research, on self-hosted DSpace 7.6.7 at openresearch-repository.anu.edu.au (CNAME dspace-prod.anu.edu.au, 130.56.67.40 — ANU address space). The repository exposes a conformant OAI-PMH 2.0 harvesting interface. Confirmed by live Identify on 2026-08-19: repositoryName "Open Research", repositoryIdentifier openresearch-repository.anu.edu.au, adminEmail an anu.edu.au address, earliestDatestamp 2004-01-01, granularity YYYY-MM-DDThh:mm:ssZ, deletedRecord transient. Twelve metadata formats are offered: oai_dc, qdc, mods, mets, didl, ore, rdf, marc, xoai, dim, etdms and uketd_dc.
+
+
+    OPERATOR: institution. The software is open-source DSpace, but ANU runs the instance on ANU infrastructure under ANU''s own domain, and the OAI-PMH contract is an open community standard (OAI-PMH 2.0), not a vendor''s proprietary API. This is the case the university pipeline distinguishes from a SaaS tenancy: nobody else''s customers are served by this endpoint.
+
+
+    PROVENANCE: DERIVED by API Evangelist from the OAI-PMH 2.0 specification as instantiated by this endpoint, with every value below read from live Identify and ListMetadataFormats responses on 2026-08-19. ANU publishes no OpenAPI for it.'
+  contact:
+    name: ANU Open Research
+    email: genevieve.turner@anu.edu.au
+    url: https://openresearch.anu.edu.au/open-research-collections
+  x-operator: institution
+  x-provenance:
+    method: probed
+    generated: '2026-08-19'
+    source: https://openresearch-repository.anu.edu.au/server/oai/request?verb=Identify
+    derived_by: API Evangelist university pipeline
+  x-standard:
+    id: oai-pmh
+    name: Open Archives Initiative Protocol for Metadata Harvesting
+    version: '2.0'
+    spec: http://www.openarchives.org/OAI/openarchivesprotocol.html
+servers:
+- url: https://openresearch-repository.anu.edu.au/server/oai
+  description: ANU Open Research OAI-PMH provider (DSpace 7.6.7, self-hosted).
+tags:
+- name: Harvesting
+  description: OAI-PMH verbs for metadata harvesting.
+paths:
+  /request:
+    get:
+      operationId: oaiPmhRequest
+      summary: Issue an OAI-PMH verb
+      description: Single dispatch endpoint for all six OAI-PMH 2.0 verbs. The verb query parameter selects the operation; the remaining parameters are conditional on the verb. All responses are XML in the http://www.openarchives.org/OAI/2.0/ namespace.
+      tags:
+      - Harvesting
+      parameters:
+      - name: verb
+        in: query
+        required: true
+        description: The OAI-PMH verb to execute.
+        schema:
+          type: string
+          enum:
+          - Identify
+          - ListMetadataFormats
+          - ListSets
+          - ListIdentifiers
+          - ListRecords
+          - GetRecord
+          examples:
+          - Identify
+      - name: metadataPrefix
+        in: query
+        required: false
+        description: Metadata format to return. Required for ListIdentifiers, ListRecords and GetRecord. Twelve prefixes are supported by this repository.
+        schema:
+          type: string
+          enum:
+          - oai_dc
+          - qdc
+          - mods
+          - mets
+          - didl
+          - ore
+          - rdf
+          - marc
+          - xoai
+          - dim
+          - etdms
+          - uketd_dc
+          examples:
+          - oai_dc
+      - name: identifier
+        in: query
+        required: false
+        description: 'OAI identifier of a single record. Required for GetRecord. Form: oai:openresearch-repository.anu.edu.au:1885/1234'
+        schema:
+          type: string
+          examples:
+          - oai:openresearch-repository.anu.edu.au:1885/1234
+      - name: set
+        in: query
+        required: false
+        description: Set spec to restrict a selective harvest to one collection or community.
+        schema:
+          type: string
+      - name: from
+        in: query
+        required: false
+        description: Lower bound on datestamp, YYYY-MM-DDThh:mm:ssZ. Earliest datestamp in this repository is 2004-01-01T00:00:00Z.
+        schema:
+          type: string
+          format: date-time
+      - name: until
+        in: query
+        required: false
+        description: Upper bound on datestamp, YYYY-MM-DDThh:mm:ssZ.
+        schema:
+          type: string
+          format: date-time
+      - name: resumptionToken
+        in: query
+        required: false
+        description: Continuation token returned by a previous incomplete list response. Exclusive of all other arguments except verb.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: An OAI-PMH XML response. Protocol-level failures (badVerb, badArgument, cannotDisseminateFormat, idDoesNotExist, noRecordsMatch, noSetHierarchy, badResumptionToken) are returned inside this 200 as an <error> element with a code attribute, per the OAI-PMH specification — status code alone is not a success signal.
+          content:
+            text/xml:
+              schema:
+                type: string
+                contentMediaType: text/xml
+              examples:
+                identify:
+                  summary: Live Identify response captured 2026-08-19
+                  externalValue: ../examples/anu-open-research-oai-identify-example.xml

@@ -1,0 +1,4 @@
+{
+  "_comment": "Live response captured from https://api.quantumnumbers.anu.edu.au/?length=4&type=uint8 with no x-api-key header, 2026-08-19. HTTP 403, application/json. method: probed.",
+  "message": "Forbidden"
+}

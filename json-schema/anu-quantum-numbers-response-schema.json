@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anu/refs/heads/main/json-schema/anu-quantum-numbers-response-schema.json",
+  "title": "ANU Quantum Numbers response",
+  "description": "Response envelope returned by both the ANU Quantum Numbers (AQN) API at api.quantumnumbers.anu.edu.au and the deprecated legacy QRNG@ANU endpoint at qrng.anu.edu.au/API/jsonI.php. ANU publishes no schema; this one is DERIVED by API Evangelist from ANU's published documentation and confirmed against a live legacy response captured 2026-08-19.",
+  "x-provenance": {
+    "method": "derived",
+    "generated": "2026-08-19",
+    "source": "https://quantumnumbers.anu.edu.au/documentation",
+    "confirmed_against": "https://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8",
+    "x-operator": "institution"
+  },
+  "type": "object",
+  "required": ["type", "length", "data", "success"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["uint8", "uint16", "hex8", "hex16"],
+      "description": "Echo of the requested data type. hex8 is offered by the AQN service only; the legacy endpoint offers uint8, uint16 and hex16."
+    },
+    "length": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1024,
+      "description": "Number of values in data."
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1024,
+      "description": "Block size, present for the hexadecimal types. AQN caps this at 10; the legacy endpoint documents 1-1024."
+    },
+    "data": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1024,
+      "description": "The quantum random values.",
+      "items": {
+        "oneOf": [
+          { "type": "integer", "minimum": 0, "maximum": 65535 },
+          { "type": "string", "pattern": "^[0-9a-f]+$" }
+        ]
+      }
+    },
+    "success": {
+      "type": "boolean",
+      "description": "True when the request was served. Note that the legacy endpoint signals a rate-limit refusal by returning a plain-text body with HTTP 200 rather than this envelope with success:false."
+    }
+  }
+}

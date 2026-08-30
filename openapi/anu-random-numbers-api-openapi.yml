@@ -1,0 +1,274 @@
+openapi: 3.2.0
+info:
+  title: Anu Random Numbers API
+  termsOfService: https://www.anu.edu.au/disclaimer
+  x-refined-note:
+  - x-lifecycle differs across the merged source definitions and was not carried
+  - x-operator-evidence differs across the merged source definitions and was not carried
+  - x-provenance differs across the merged source definitions and was not carried
+  x-operator: institution
+  version: '1.0'
+  description: 'Operations tagged Random Numbers across 2 of this provider''s published API definitions: anu-qrng-legacy-openapi.yml, anu-quantum-numbers-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://qrng.anu.edu.au
+  description: ANU-hosted legacy service. Deprecated.
+- url: https://api.quantumnumbers.anu.edu.au
+  description: Production (AWS API Gateway, ANU-operated). Returns 403 {"message":"Forbidden"} without a valid x-api-key.
+tags:
+- name: Random Numbers
+  description: Retrieval of quantum-generated random values.
+paths:
+  /API/jsonI.php:
+    get:
+      operationId: getLegacyQuantumRandomNumbers
+      summary: Request an array of quantum random numbers (legacy, deprecated)
+      deprecated: true
+      description: Returns an array of quantum random values. No authentication. Limited to one request per minute per client; over the limit the service returns HTTP 200 with a plain-text message pointing at the AQN service, NOT a 429 and NOT a JSON body — callers must check the content type, not the status code.
+      tags:
+      - Random Numbers
+      parameters:
+      - name: length
+        in: query
+        required: true
+        description: Number of values to return. Must be between 1 and 1024.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1024
+          examples:
+          - 10
+      - name: type
+        in: query
+        required: true
+        description: Data type. uint8 returns integers 0-255, uint16 returns integers 0-65535, hex16 returns hexadecimal characters 00-ff assembled into blocks.
+        schema:
+          type: string
+          enum:
+          - uint8
+          - uint16
+          - hex16
+          examples:
+          - uint8
+      - name: size
+        in: query
+        required: false
+        description: Block size. Only needed for the hex16 data type. Must be between 1 and 1024.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1024
+          examples:
+          - 2
+      responses:
+        '200':
+          description: An array of quantum random values, OR — when the one-per-minute rate limit has been tripped — a plain-text refusal served with the same 200 status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyQrngResponse'
+              examples:
+                uint8:
+                  summary: Live response captured 2026-08-19
+                  value:
+                    type: uint8
+                    length: 4
+                    data:
+                    - 74
+                    - 205
+                    - 98
+                    - 159
+                    success: true
+            text/html:
+              schema:
+                type: string
+              examples:
+                rateLimited:
+                  summary: Rate-limit refusal, served as HTTP 200
+                  value: The QRNG API is limited to 1 requests per minute. For more requests, please visit https://quantumnumbers.anu.edu.au or contact qrng@anu.edu.au.
+    servers:
+    - url: https://qrng.anu.edu.au
+      description: ANU-hosted legacy service. Deprecated.
+  /:
+    get:
+      operationId: getQuantumRandomNumbers
+      summary: Request an array of quantum random numbers
+      description: Returns an array of quantum random values of the requested data type and length. For the hexadecimal types the size parameter sets the number of bytes in each returned block. Requests without a valid x-api-key header are rejected by the gateway with 403.
+      tags:
+      - Random Numbers
+      parameters:
+      - name: length
+        in: query
+        required: true
+        description: Number of values to return. Must be between 1 and 1024.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1024
+          examples:
+          - 10
+      - name: type
+        in: query
+        required: true
+        description: Data type of the returned values. uint8 returns integers 0-255, uint16 returns integers 0-65535, hex8 returns hexadecimal characters 00-ff, hex16 returns hexadecimal characters 0000-ffff.
+        schema:
+          type: string
+          enum:
+          - uint8
+          - uint16
+          - hex8
+          - hex16
+          examples:
+          - uint8
+      - name: size
+        in: query
+        required: false
+        description: Block size. Only required for the hex8 and hex16 data types; sets the length of each returned block. Must be between 1 and 10.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 10
+          examples:
+          - 2
+      responses:
+        '200':
+          description: An array of quantum random values.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuantumNumbersResponse'
+              examples:
+                uint8:
+                  summary: Ten integers between 0 and 255
+                  value:
+                    type: uint8
+                    length: 10
+                    data:
+                    - 74
+                    - 205
+                    - 98
+                    - 159
+                    - 3
+                    - 241
+                    - 88
+                    - 17
+                    - 130
+                    - 62
+                    success: true
+                hex16:
+                  summary: Ten two-byte hexadecimal blocks
+                  value:
+                    type: hex16
+                    length: 10
+                    size: 2
+                    data:
+                    - 4acd
+                    - 629f
+                    - 03f1
+                    - '5811'
+                    - 823e
+                    - b0c4
+                    - 17aa
+                    - 9d50
+                    - e213
+                    - 6f88
+                    success: true
+        '403':
+          description: Missing or invalid API key. Returned by the AWS API Gateway before the service is reached.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewayError'
+              examples:
+                forbidden:
+                  value:
+                    message: Forbidden
+        '429':
+          description: Request quota for the API key exceeded.
+      security:
+      - ApiKeyAuth: []
+    servers:
+    - url: https://api.quantumnumbers.anu.edu.au
+      description: Production (AWS API Gateway, ANU-operated). Returns 403 {"message":"Forbidden"} without a valid x-api-key.
+components:
+  schemas:
+    LegacyQrngResponse:
+      type: object
+      required:
+      - type
+      - length
+      - data
+      - success
+      properties:
+        type:
+          type: string
+          enum:
+          - uint8
+          - uint16
+          - hex16
+        length:
+          type: integer
+          minimum: 1
+          maximum: 1024
+        size:
+          type: integer
+          minimum: 1
+          maximum: 1024
+        data:
+          type: array
+          items:
+            oneOf:
+            - type: integer
+            - type: string
+        success:
+          type: boolean
+    GatewayError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Gateway-level error message, e.g. "Forbidden".
+    QuantumNumbersResponse:
+      type: object
+      required:
+      - type
+      - length
+      - data
+      - success
+      properties:
+        type:
+          type: string
+          enum:
+          - uint8
+          - uint16
+          - hex8
+          - hex16
+          description: Echo of the requested data type.
+        length:
+          type: integer
+          minimum: 1
+          maximum: 1024
+          description: Echo of the requested array length.
+        size:
+          type: integer
+          minimum: 1
+          maximum: 10
+          description: Echo of the requested block size. Present for the hexadecimal types.
+        data:
+          type: array
+          description: The quantum random values. Integers for uint8 and uint16; lowercase hexadecimal strings for hex8 and hex16.
+          items:
+            oneOf:
+            - type: integer
+            - type: string
+        success:
+          type: boolean
+          description: True when the request was served.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: Free API key issued self-serve after registration at https://quantumnumbers.anu.edu.au. Sent on every request as the x-api-key header.
+x-refined-from:
+- anu-qrng-legacy-openapi.yml
+- anu-quantum-numbers-openapi.yml

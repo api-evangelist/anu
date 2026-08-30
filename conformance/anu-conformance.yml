@@ -1,0 +1,147 @@
+generated: '2026-08-19'
+method: probed
+source: https://www.anu.edu.au/
+x-operator: institution
+note: >-
+  Domain-standard conformance for the Kin Score `education` regulatory regime, probed
+  directly against ANU-operated hosts on 2026-08-19. Every `conforms: true` below points at
+  a specific live response, not at a prose claim on a web page. Standards ANU does not
+  publicly expose are recorded as false with the negative probe that established it —
+  reward-only, nothing invented to fill a slot. Surfaces belonging to ANU's vendors
+  (Elsevier Pure at researchportalplus.anu.edu.au) are excluded: their conformance is the
+  vendor's, not the institution's.
+regime:
+  id: education
+  name: Education & Research
+  matched_via: tags
+domain_standards:
+- id: oai-pmh
+  conforms: true
+  version: '2.0'
+  operator: institution
+  evidence: >-
+    GET https://openresearch-repository.anu.edu.au/server/oai/request?verb=Identify returns
+    HTTP 200 text/xml with repositoryName "Open Research", repositoryIdentifier
+    openresearch-repository.anu.edu.au, protocolVersion 2.0, earliestDatestamp
+    2004-01-01T00:00:00Z, granularity YYYY-MM-DDThh:mm:ssZ, deletedRecord transient.
+    ListMetadataFormats returns twelve prefixes: oai_dc, qdc, mods, mets, didl, ore, rdf,
+    marc, xoai, dim, etdms, uketd_dc.
+  evidence_url: https://openresearch-repository.anu.edu.au/server/oai/request?verb=Identify
+  artifact: openapi/anu-open-research-oai-pmh-openapi.yml
+- id: shibboleth
+  conforms: true
+  operator: institution
+  evidence: >-
+    ANU operates a Shibboleth Identity Provider. GET https://idp2.anu.edu.au/idp/shibboleth
+    returns HTTP 200 application/xml (14,896 bytes) with entityID
+    https://idp2.anu.edu.au/idp/shibboleth, an IDPSSODescriptor and an
+    AttributeAuthorityDescriptor, shibmd:Scope anu.edu.au, and OrganizationDisplayName
+    "Australian National University".
+  evidence_url: https://idp2.anu.edu.au/idp/shibboleth
+  artifact: examples/anu-idp-saml-entity-descriptor-example.xml
+- id: saml
+  conforms: true
+  version: '2.0'
+  operator: institution
+  evidence: >-
+    The ANU IdP metadata declares protocolSupportEnumeration
+    urn:oasis:names:tc:SAML:2.0:protocol and publishes SAML 2.0 SingleSignOnService
+    endpoints for HTTP-POST, HTTP-Redirect and SOAP/ECP bindings plus a SOAP
+    ArtifactResolutionService. Three ANU entityIDs appear in the Australian Access
+    Federation aggregate at https://md.aaf.edu.au/aaf-metadata.xml (359 entities total):
+    the IdP, plus SAML SPs for wattlecourses.anu.edu.au and mdl-stage.anu.edu.au. AAF is an
+    eduGAIN participant, so these entities are interfederated internationally.
+  evidence_url: https://md.aaf.edu.au/aaf-metadata.xml
+- id: lti
+  conforms: true
+  version: '1.3'
+  operator: institution
+  evidence: >-
+    ANU's learning management system, Wattle, is self-hosted Moodle at
+    wattlecourses.anu.edu.au and exposes a live LTI 1.3 platform surface. GET
+    https://wattlecourses.anu.edu.au/mod/lti/certs.php returns HTTP 200 application/json
+    with a JWKS containing an RS256 RSA key (kid ca018582b9cd39583b18); the paired OAuth2
+    token endpoint at /mod/lti/token.php returns HTTP 400 {"error":"invalid_request"} to an
+    empty request, which is a live, correctly-rejecting endpoint rather than a soft 404.
+  evidence_url: https://wattlecourses.anu.edu.au/mod/lti/certs.php
+- id: orcid
+  conforms: true
+  operator: institution
+  evidence: >-
+    ORCID identifiers are carried in the metadata ANU serves from its own OAI-PMH endpoint.
+    ListRecords with metadataPrefix=xoai returns author records bearing ORCID work
+    identifiers, e.g. ORCID:/0000-0002-1304-4219/work/167651074 and
+    ORCID:/0000-0002-5626-1029/work/162952751.
+  evidence_url: https://openresearch-repository.anu.edu.au/server/oai/request?verb=ListRecords&metadataPrefix=xoai
+- id: datacite
+  conforms: true
+  operator: institution
+  evidence: >-
+    ANU is a DataCite member in its own right. api.datacite.org records provider id `anu`
+    and repository client `anu.repo` holding DOI prefix 10.25911 (created 2017-05-22), under
+    which 25,559 DOIs are registered. Sample: 10.25911/e0ky-7720, publisher "The Australian
+    National University Data Commons", resolving to
+    https://datacommons.anu.edu.au/DataCommons/item/anudc:6515. DOIs under the same prefix
+    appear throughout the Open Research OAI-PMH feed.
+  evidence_url: https://api.datacite.org/prefixes/10.25911
+- id: crossref
+  conforms: false
+  operator: institution
+  evidence: >-
+    Crossref member 9402 exists under the name "The Australian National University", but
+    api.crossref.org reports total-dois 0 for that member — a registered membership with no
+    deposited content. Recorded as non-conforming: a membership row is not a machine-readable
+    surface.
+  evidence_url: https://api.crossref.org/members?query=Australian+National+University
+- id: scim
+  conforms: false
+  evidence: No public SCIM 2.0 provisioning endpoint found on any anu.edu.au host. Identity provisioning is internal.
+- id: oneroster
+  conforms: false
+  evidence: No OneRoster surface found. OneRoster is predominantly K-12; not expected at a research university.
+- id: ed-fi
+  conforms: false
+  evidence: No Ed-Fi surface found. Ed-Fi is a US K-12 data standard and does not apply to an Australian university.
+- id: caliper
+  conforms: false
+  evidence: >-
+    No public Caliper Analytics event store or endpoint found. Moodle can emit Caliper, but
+    nothing is publicly exposed on wattlecourses.anu.edu.au.
+- id: qti
+  conforms: false
+  evidence: No public QTI assessment surface found; assessment content sits behind Wattle authentication.
+general_standards:
+- id: http
+  conforms: true
+  evidence: All ANU-operated surfaces profiled here are plain HTTPS over TLS.
+- id: json
+  conforms: true
+  evidence: Both quantum-random-number endpoints return application/json.
+- id: xml
+  conforms: true
+  evidence: OAI-PMH and the SAML IdP metadata are XML.
+- id: rest
+  conforms: true
+  evidence: >-
+    ANU's self-hosted DSpace 7.6.7 serves a HAL+JSON REST API at
+    https://openresearch-repository.anu.edu.au/server/api (HTTP 200,
+    application/hal+json, dspaceVersion "DSpace 7.6.7"). The contract shape is DSpace's
+    upstream design, not ANU engineering; the instance and its data are ANU's.
+- id: openapi
+  conforms: false
+  evidence: >-
+    ANU publishes no OpenAPI description for any of its surfaces. The OpenAPI documents in
+    this repository are DERIVED by API Evangelist from ANU documentation and live probes and
+    are marked as such.
+- id: oauth2
+  conforms: partial
+  evidence: >-
+    An OAuth2 client-credentials token endpoint exists at
+    https://wattlecourses.anu.edu.au/mod/lti/token.php as part of the LTI 1.3 platform, but
+    it is not offered as a general-purpose developer authorization surface. The AQN API uses
+    a static x-api-key header, not OAuth.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    No application/problem+json anywhere. The AQN gateway returns {"message":"Forbidden"};
+    the legacy QRNG endpoint returns a plain-text refusal with HTTP 200.

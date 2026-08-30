@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anu/refs/heads/main/json-schema/anu-quantum-numbers-request-schema.json",
+  "title": "ANU Quantum Numbers request parameters",
+  "description": "Query parameters accepted by the ANU Quantum Numbers (AQN) API. DERIVED by API Evangelist from ANU's own parameter table at https://quantumnumbers.anu.edu.au/documentation. ANU publishes no schema.",
+  "x-provenance": {
+    "method": "derived",
+    "generated": "2026-08-19",
+    "source": "https://quantumnumbers.anu.edu.au/documentation",
+    "x-operator": "institution"
+  },
+  "type": "object",
+  "required": ["length", "type"],
+  "additionalProperties": false,
+  "properties": {
+    "length": { "type": "integer", "minimum": 1, "maximum": 1024, "description": "Length of the array to return." },
+    "type": { "type": "string", "enum": ["uint8", "uint16", "hex8", "hex16"], "description": "Data type of the returned values." },
+    "size": { "type": "integer", "minimum": 1, "maximum": 10, "description": "Block size. Only needed for the hex8 and hex16 data types." }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "enum": ["hex8", "hex16"] } }, "required": ["type"] },
+      "then": { "required": ["size"] }
+    }
+  ]
+}

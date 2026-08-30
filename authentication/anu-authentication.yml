@@ -1,0 +1,74 @@
+generated: '2026-08-19'
+method: derived
+source: https://quantumnumbers.anu.edu.au/documentation
+x-operator: institution
+summary:
+  types:
+  - apiKey
+  - none
+  - saml2
+  api_key_in:
+  - header
+  oauth2_flows: []
+  note: >-
+    ANU has no single institutional authorization surface. Its three publicly reachable,
+    institution-operated API surfaces authenticate three different ways, and one of them
+    does not authenticate at all. The identity surface that does the real work at ANU is
+    SAML 2.0 federation through the Australian Access Federation — it governs access to
+    Wattle, the library and staff systems, but it is a login federation, not an API
+    authorization layer, and no developer can obtain a token from it.
+schemes:
+- name: AqnApiKey
+  type: apiKey
+  in: header
+  parameter: x-api-key
+  applies_to: https://api.quantumnumbers.anu.edu.au
+  issuance: Self-serve registration at https://quantumnumbers.anu.edu.au
+  cost: free
+  purpose: Authorize calls to the ANU Quantum Numbers service.
+  evidence: >-
+    ANU's own documentation gives the call form as
+    curl -X GET -H "x-api-key:${API_KEY}" "${API_URL}?length=..&type=..&size=..". A live
+    request with no key returns HTTP 403 {"message":"Forbidden"} from the gateway.
+  rotation: Not documented.
+  scopes: none
+- name: LegacyQrngAnonymous
+  type: none
+  applies_to: https://qrng.anu.edu.au/API/jsonI.php
+  purpose: The deprecated legacy endpoint requires no credential of any kind.
+  evidence: >-
+    Live unauthenticated GET returned {"type":"uint8","length":4,"data":[74,205,98,159],"success":true}
+    on 2026-08-19. Access control is replaced by a one-request-per-minute throttle.
+- name: OaiPmhAnonymous
+  type: none
+  applies_to: https://openresearch-repository.anu.edu.au/server/oai/request
+  purpose: OAI-PMH harvesting is open by design; no credential is required or accepted.
+  evidence: Live Identify and ListRecords calls succeeded unauthenticated on 2026-08-19.
+- name: DSpaceRestAnonymous
+  type: none
+  applies_to: https://openresearch-repository.anu.edu.au/server/api
+  purpose: >-
+    The DSpace REST root and its discovery/browse resources are readable anonymously; write
+    and some core collections require a session.
+  evidence: >-
+    GET /server/api returns 200 application/hal+json; GET /server/api/core/items returns 401
+    application/json, so the surface is genuinely access-controlled rather than uniformly open.
+- name: AafShibbolethSso
+  type: saml2
+  applies_to: https://idp2.anu.edu.au/idp/shibboleth
+  purpose: >-
+    Institutional single sign-on for staff and students, federated through the Australian
+    Access Federation and interfederated via eduGAIN. Governs human access to Wattle, library
+    resources and staff systems.
+  evidence: >-
+    Live IdP metadata publishes SAML 2.0 SSO endpoints for HTTP-POST, HTTP-Redirect and
+    SOAP/ECP bindings with scope anu.edu.au.
+  developer_usable: false
+  developer_note: >-
+    This is an end-user login federation. There is no client registration path, no token
+    endpoint and no consent surface an outside developer could integrate against.
+excluded:
+- surface: https://researchportalplus.anu.edu.au
+  reason: >-
+    Elsevier Pure tenancy (CNAME anu2-portal.elsevierpure.com). Its authentication is
+    Elsevier's, and crediting it to ANU is exactly the misattribution this pipeline prevents.

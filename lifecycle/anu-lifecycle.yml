@@ -1,0 +1,52 @@
+generated: '2026-08-19'
+method: probed
+source: https://qrng.anu.edu.au/contact/api-documentation/
+x-operator: institution
+note: >-
+  ANU publishes one genuine, dated deprecation notice — on the QRNG@ANU legacy endpoint —
+  and nothing else resembling lifecycle governance. There is no changelog, no versioning
+  policy, no status page and no SLA on any institution-operated surface. The deprecation
+  notice is real and worth crediting; it is also unusually weak, because it names no sunset
+  date and the deprecated endpoint emits no Deprecation or Sunset header.
+versioning:
+  scheme: none
+  detail: >-
+    No API surface carries a version in its path, header or media type. The AQN service
+    replaced the legacy service at a new hostname rather than under a version discipline.
+    The Open Research repository advertises its software version (DSpace 7.6.7) in the REST
+    root document, but the API contract itself is unversioned.
+  docs: null
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  notices:
+  - surface: https://qrng.anu.edu.au/API/jsonI.php
+    status: deprecated
+    announced_at: https://qrng.anu.edu.au/contact/api-documentation/
+    text: >-
+      "To provide a more reliable service, the QRNG@ANU API is now hosted on AWS platform.
+      Please visit our new service at ANU Quantum Numbers. The old service will be scaled
+      back and eventually retired."
+    superseded_by: https://api.quantumnumbers.anu.edu.au
+    sunset_date: null
+    machine_readable: false
+    gap: >-
+      The notice is prose on a documentation page. No Deprecation or Sunset response header
+      is emitted, so an automated client cannot discover the deprecation. "Scaled back" has
+      already happened in practice: the endpoint is throttled to one request per minute.
+sla:
+  url: null
+  note: No SLA, uptime commitment or support tier is published for any ANU public API surface.
+status_page: null
+status_page_note: >-
+  services.anu.edu.au/information-technology is the IT service portal, but
+  services.anu.edu.au/information-technology/it-service-status returns 404 and no
+  machine-readable status feed was found.
+changelog: null
+deprecated_operations:
+- operation: getLegacyQuantumRandomNumbers
+  surface: https://qrng.anu.edu.au/API/jsonI.php
+  replacement: getQuantumRandomNumbers on https://api.quantumnumbers.anu.edu.au
+  since: unknown
+  sunset: unannounced

@@ -1,0 +1,34 @@
+<!--
+  Excerpt of the live SAML 2.0 IdP metadata served at https://idp2.anu.edu.au/idp/shibboleth,
+  captured 2026-08-19. method: probed. Full document is 14,896 bytes and is served by ANU;
+  only the identifying elements are reproduced here. This entity is registered in the
+  Australian Access Federation (AAF) metadata aggregate at https://md.aaf.edu.au/aaf-metadata.xml.
+-->
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+                  xmlns:shibmd="urn:mace:shibboleth:metadata:1.0"
+                  entityID="https://idp2.anu.edu.au/idp/shibboleth">
+  <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <shibmd:Scope regexp="false">anu.edu.au</shibmd:Scope>
+    </Extensions>
+    <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+                               Location="https://idp2.anu.edu.au:8443/idp/profile/SAML2/SOAP/ArtifactResolution"
+                               index="2" isDefault="true"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                         Location="https://idp2.anu.edu.au/idp/profile/SAML2/POST/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                         Location="https://idp2.anu.edu.au/idp/profile/SAML2/Redirect/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+                         Location="https://idp2.anu.edu.au/idp/profile/SAML2/SOAP/ECP"/>
+  </IDPSSODescriptor>
+  <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <shibmd:Scope regexp="false">anu.edu.au</shibmd:Scope>
+    </Extensions>
+  </AttributeAuthorityDescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">anu.edu.au</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Australian National University</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.anu.edu.au</OrganizationURL>
+  </Organization>
+</EntityDescriptor>

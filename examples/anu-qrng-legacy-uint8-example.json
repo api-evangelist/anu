@@ -1,0 +1,7 @@
+{
+  "_comment": "Live response captured from https://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8 on 2026-08-19. method: probed.",
+  "type": "uint8",
+  "length": 4,
+  "data": [74, 205, 98, 159],
+  "success": true
+}

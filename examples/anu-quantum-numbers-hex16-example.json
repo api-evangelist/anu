@@ -1,0 +1,8 @@
+{
+  "_comment": "Illustrative response for https://api.quantumnumbers.anu.edu.au?length=10&type=hex16&size=2. method: derived from ANU's published documentation and the confirmed legacy envelope — NOT captured live, because the AQN endpoint requires an x-api-key API Evangelist does not hold. Values are placeholders.",
+  "type": "hex16",
+  "length": 10,
+  "size": 2,
+  "data": ["4acd", "629f", "03f1", "5811", "823e", "b0c4", "17aa", "9d50", "e213", "6f88"],
+  "success": true
+}

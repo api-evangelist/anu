@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type="text/xsl" href="static/style.xsl"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2026-08-19T21:37:39Z</responseDate>
+  <request verb="Identify">https://openresearch-repository.anu.edu.au/server/oai/request</request>
+  <Identify>
+    <repositoryName>Open Research</repositoryName>
+    <baseURL>https://openresearch-repository.anu.edu.au/server/oai/request</baseURL>
+    <protocolVersion>2.0</protocolVersion>
+    <adminEmail>genevieve.turner@anu.edu.au</adminEmail>
+    <earliestDatestamp>2004-01-01T00:00:00Z</earliestDatestamp>
+    <deletedRecord>transient</deletedRecord>
+    <granularity>YYYY-MM-DDThh:mm:ssZ</granularity>
+    <description>
+      <oai-identifier xmlns="http://www.openarchives.org/OAI/2.0/oai-identifier" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai-identifier http://www.openarchives.org/OAI/2.0/oai-identifier.xsd">
+        
+
+        <scheme>oai</scheme>
+        
+
+        <repositoryIdentifier>openresearch-repository.anu.edu.au</repositoryIdentifier>
+        
+
+        <delimiter>:</delimiter>
+        
+
+        <sampleIdentifier>oai:openresearch-repository.anu.edu.au:1885/1234</sampleIdentifier>
+        
+
+      </oai-identifier>
+    </description>
+  </Identify>
+</OAI-PMH>
+
