@@ -48,7 +48,7 @@ accessModel:
   - rate-limits
   generated: '2026-08-19'
   method: probed
-position: Consumer
+position: Consuming
 access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/anu.png
 url: https://raw.githubusercontent.com/api-evangelist/anu/refs/heads/main/apis.yml
