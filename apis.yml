@@ -170,6 +170,13 @@ apis:
   - Shibboleth
   - AAF
   - eduGAIN
+  - SSO
+  tags_raw:
+  - Identity Federation
+  - SAML
+  - Shibboleth
+  - AAF
+  - eduGAIN
   - Single Sign-On
   x-operator: institution
   x-operator-evidence: Metadata is served from an anu.edu.au host and self-asserts ANU as the organization.
@@ -196,6 +203,11 @@ apis:
   humanURL: https://researchportalplus.anu.edu.au/
   baseURL: https://researchportalplus.anu.edu.au/
   tags:
+  - Research Information
+  - Elsevier Pure
+  - Tenants
+  - Research Outputs
+  tags_raw:
   - Research Information
   - Elsevier Pure
   - Tenant
