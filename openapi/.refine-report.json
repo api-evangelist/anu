@@ -1,0 +1,27 @@
+{
+  "provider": "anu",
+  "sources": [
+    "_original/anu-open-research-oai-pmh-openapi.yml",
+    "_original/anu-qrng-legacy-openapi.yml",
+    "_original/anu-quantum-numbers-openapi.yml"
+  ],
+  "outputs": [
+    "anu-harvesting-api-openapi.yml",
+    "anu-random-numbers-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "anu-open-research-oai-pmh-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "anu-qrng-legacy-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "anu-quantum-numbers-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "tag 'Random Numbers' spans 2 source specs (anu-qrng-legacy-openapi.yml, anu-quantum-numbers-openapi.yml): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "anu-harvesting-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anu-random-numbers-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

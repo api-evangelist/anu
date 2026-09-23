@@ -4,7 +4,7 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Australian National University
 providerId: anu
 created: '2026-06-03'
-modified: '2026-06-03'
+modified: '2026-08-19'
 reconciled: false
 tags:
 - Education
@@ -12,21 +12,47 @@ tags:
 - University
 - Rate Limiting
 description: >-
-  Australian National University does not publish a unified public rate-limit table across its APIs. Open
-  metadata and harvesting endpoints (OAI-PMH, IIIF, library) may throttle large-scale
-  or automated harvesting; clients should harvest politely, honor Retry-After, and
-  contact the relevant service for bulk access.
-notes: Confirm per-service limits with each API's documentation; harvest responsibly.
+  ANU publishes no unified rate-limit table across its APIs, but one hard, published limit
+  does exist and was confirmed by live probe on 2026-08-19: the deprecated QRNG@ANU legacy
+  endpoint is throttled to ONE request per minute. Critically, it does NOT signal that with
+  429 — it returns HTTP 200 with a plain-text sentence in place of the JSON envelope, and
+  emits no Retry-After header. A client that branches on status code will ingest the refusal
+  as data. The current AQN service meters per API key through an AWS API Gateway usage plan
+  whose numbers ANU does not publish. OAI-PMH harvesting is unmetered but should be polite.
+notes: >-
+  method: probed. The 429 assumption in the previous version of this file was wrong for the
+  legacy endpoint and is corrected below.
 sources:
-- https://raw.githubusercontent.com/api-evangelist/anu/refs/heads/main/apis.yml
+- https://qrng.anu.edu.au/contact/api-documentation/
+- https://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8
+- https://quantumnumbers.anu.edu.au/documentation
 responseCodes:
-  throttled: 429
+  throttled: 200
+  throttled_note: >-
+    The legacy QRNG endpoint returns 200 text/html on throttle, not 429. The AQN gateway is
+    documented to use 429 for quota exhaustion but this was not observed without a key.
 limits:
-- name: Default
+- name: QRNG@ANU legacy JSON API
+  surface: https://qrng.anu.edu.au/API/jsonI.php
   scope: client
   metric: requests-per-minute
-  limit: see service documentation
-  notes: No published global limit; large harvests may be rate-limited.
+  limit: 1
+  enforcement: HTTP 200 with a plain-text refusal body; no Retry-After, no 429.
+  source: https://qrng.anu.edu.au/contact/api-documentation/
+  verified: '2026-08-19'
+- name: ANU Quantum Numbers (AQN) API
+  surface: https://api.quantumnumbers.anu.edu.au
+  scope: api-key
+  metric: requests-per-key
+  limit: unpublished
+  enforcement: AWS API Gateway usage plan; 429 expected on quota exhaustion.
+  notes: Quota values are not published. A free key is issued self-serve.
+- name: ANU Open Research OAI-PMH
+  surface: https://openresearch-repository.anu.edu.au/server/oai/request
+  scope: client
+  metric: none-published
+  limit: unpublished
+  notes: No documented limit. Use resumptionToken paging and harvest off-peak.
 policies:
 - name: Backoff Strategy
   description: Exponential backoff with jitter; honor Retry-After; harvest during off-peak hours.

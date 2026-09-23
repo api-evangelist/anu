@@ -4,7 +4,7 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Australian National University
 providerId: anu
 created: '2026-06-03'
-modified: '2026-06-03'
+modified: '2026-08-19'
 reconciled: false
 tags:
 - Education
@@ -12,22 +12,52 @@ tags:
 - University
 - Plans
 description: >-
-  Australian National University is a non-commercial higher-education institution; its APIs are not sold
-  as a commercial product. Public APIs (library, repository, course, and open-metadata
-  interfaces) are offered free of charge, typically for non-commercial use. Most
-  administrative and identity APIs are not openly self-service and require institutional
-  affiliation, credentials, or federation membership rather than a paid plan.
+  ANU is a non-commercial higher-education institution and sells no API access. Everything it
+  operates publicly is free. Corrected 2026-08-19: the previous version of this file described
+  free "library, repository, course, and open-metadata interfaces" — ANU operates no public
+  library API and no public course API, so those were struck. The three plans below reflect
+  only surfaces confirmed by live probe: a free self-serve API key for the ANU Quantum Numbers
+  service, unauthenticated open access to the deprecated legacy RNG endpoint and to OAI-PMH
+  harvesting, and affiliation-gated access to everything else behind Australian Access
+  Federation single sign-on.
 notes: >-
-  No published per-seat or per-call commercial pricing. "Free / Open" reflects open
-  public endpoints; "Affiliation / Credentialed" reflects access gated by institutional
-  identity rather than payment.
+  method: probed. No published per-seat or per-call pricing exists, and no paid tier was found
+  on any ANU surface. "Affiliation / Credentialed" is access gated by institutional identity
+  rather than payment — there is no way for an unaffiliated developer to buy into it.
 sources:
-- https://raw.githubusercontent.com/api-evangelist/anu/refs/heads/main/apis.yml
+- https://quantumnumbers.anu.edu.au/documentation
+- https://qrng.anu.edu.au/contact/api-documentation/
+- https://openresearch-repository.anu.edu.au/server/oai/request?verb=Identify
 plans:
-- id: anu-free-open
-  name: Free / Open
+- id: anu-aqn-free-key
+  name: ANU Quantum Numbers — Free API key
   type: free
-  description: Public open APIs (metadata, library, repository, course data) offered at no charge, generally for non-commercial use.
+  description: >-
+    Self-serve registration at quantumnumbers.anu.edu.au issues a free x-api-key for the AQN
+    service. Quota is metered by an AWS API Gateway usage plan whose values ANU does not publish.
+  surface: https://api.quantumnumbers.anu.edu.au
+  onboarding: self-serve
+  entries:
+  - label: Free API key
+    name: aqn_free_key
+    type: free
+    metric: requests
+    limit: -1
+    timeFrame: usage
+    geo: global
+    unit: 1
+    price: '0.00'
+    userMultiplied: false
+    note: Quota unpublished; 429 expected on exhaustion.
+- id: anu-free-open
+  name: Free / Open — no credential
+  type: free
+  description: >-
+    Unauthenticated access to the deprecated QRNG@ANU legacy endpoint (hard-throttled to one
+    request per minute, signalled with HTTP 200 and a plain-text body) and to OAI-PMH metadata
+    harvesting from the Open Research repository (no documented limit).
+  surface: https://openresearch-repository.anu.edu.au/server/oai/request
+  onboarding: none
   entries:
   - label: Open API Access
     name: open_api_access
@@ -42,7 +72,11 @@ plans:
 - id: anu-affiliation
   name: Affiliation / Credentialed
   type: free
-  description: Administrative and identity APIs gated behind institutional SSO, client certificates, or federation membership rather than payment.
+  description: >-
+    Administrative, learning and research-information systems gated behind Australian Access
+    Federation SAML single sign-on rather than payment — Wattle, the library discovery layer,
+    the DSpace collections that return 401, and the Elsevier Pure research portal. Not
+    purchasable by an unaffiliated developer at any price.
   entries:
   - label: Credentialed Access
     name: credentialed_access

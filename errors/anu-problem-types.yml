@@ -1,0 +1,67 @@
+generated: '2026-08-19'
+method: probed
+source: https://api.quantumnumbers.anu.edu.au
+x-operator: institution
+rfc9457: false
+format: heterogeneous
+note: >-
+  ANU's institution-operated surfaces have no common error contract. Each one fails in its
+  own idiom, and two of the three fail in ways a naive client will read as success. This is
+  the single most consequential ergonomics finding in the profile: on both the legacy QRNG
+  endpoint and the OAI-PMH endpoint, the HTTP status code is not a reliable success signal.
+envelopes:
+- surface: https://api.quantumnumbers.anu.edu.au
+  content_type: application/json
+  shape: '{"message": "<string>"}'
+  origin: AWS API Gateway default error envelope, not application code.
+  example: '{"message":"Forbidden"}'
+- surface: https://qrng.anu.edu.au/API/jsonI.php
+  content_type: text/html
+  shape: bare sentence, no envelope
+  origin: Application-level throttle.
+  example: >-
+    The QRNG API is limited to 1 requests per minute. For more requests, please visit
+    https://quantumnumbers.anu.edu.au or contact qrng@anu.edu.au.
+- surface: https://openresearch-repository.anu.edu.au/server/oai/request
+  content_type: text/xml
+  shape: '<error code="..."/> inside a normal OAI-PMH envelope'
+  origin: OAI-PMH 2.0 specification.
+  example: '<error code="badVerb">Illegal verb</error>'
+- surface: https://openresearch-repository.anu.edu.au/server/api
+  content_type: application/json
+  shape: DSpace 7 REST error body
+  origin: Upstream DSpace, not ANU.
+status_codes:
+- status: 200
+  surface: https://qrng.anu.edu.au/API/jsonI.php
+  meaning: >-
+    AMBIGUOUS. Returned both for a successful array and for a rate-limit refusal. Clients
+    MUST branch on Content-Type (application/json vs text/html) or on the presence of the
+    `success` key. A client that trusts the status code will silently ingest a refusal
+    sentence as data.
+  retryable: conditional
+- status: 200
+  surface: https://openresearch-repository.anu.edu.au/server/oai/request
+  meaning: >-
+    AMBIGUOUS by specification. OAI-PMH returns protocol errors (badVerb, badArgument,
+    cannotDisseminateFormat, idDoesNotExist, noRecordsMatch, noSetHierarchy,
+    badResumptionToken) inside a 200 response as an <error> element.
+  retryable: false
+- status: 403
+  surface: https://api.quantumnumbers.anu.edu.au
+  meaning: Missing or invalid x-api-key. Rejected at the gateway before the service is reached.
+  retryable: false
+- status: 401
+  surface: https://openresearch-repository.anu.edu.au/server/api/core/items
+  meaning: Authentication required for this DSpace collection.
+  retryable: false
+- status: 429
+  surface: https://api.quantumnumbers.anu.edu.au
+  meaning: API key quota exceeded. Documented behaviour of the AWS gateway usage plan; not observed in probe.
+  retryable: true
+  observed: false
+missing:
+- Machine-readable error catalog
+- RFC 9457 application/problem+json
+- Stable error codes or identifiers
+- Retry-After headers on the throttled legacy endpoint

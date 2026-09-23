@@ -3,8 +3,103 @@ name: Australian National University
 description: Australian National University public developer/API footprint review for APIs.json cataloging.
 url: https://raw.githubusercontent.com/api-evangelist/anu/refs/heads/main/review.yml
 created: '2026-06-03'
-modified: '2026-06-03'
+modified: '2026-08-19'
 reviews:
+  - date: '2026-08-19'
+    rating: 3
+    method: probed
+    summary: >-
+      Re-profiled under the API Evangelist university pipeline, which settles the OPERATOR of
+      each surface before saving anything. The June 2026 review was accurate but incomplete:
+      it found two surfaces where there are six, and it did not ask who runs them. Three
+      material findings. (1) ANU's research portal, researchportalplus.anu.edu.au, is an
+      ELSEVIER PURE TENANCY — it CNAMEs to anu2-portal.elsevierpure.com and returns
+      "x-product: Pure Portal". It is recorded as x-operator: tenant and no Pure specification
+      is saved here; ANU's data, Elsevier's contract. (2) ANU operates a Shibboleth identity
+      provider publishing machine-readable SAML 2.0 metadata at idp2.anu.edu.au, registered in
+      the Australian Access Federation and interfederated via eduGAIN. This is the single
+      largest previously-uncatalogued institution-operated surface in the profile. (3) The
+      legacy QRNG endpoint signals its one-request-per-minute throttle with HTTP 200 and a
+      plain-text sentence, not 429 and not JSON — the previously recorded rate-limit artifact
+      asserted 429 and has been corrected. ANU publishes no OpenAPI for anything; every spec
+      in openapi/ is derived or probed by API Evangelist and marked as such. NCI and the
+      student-built timetable.cssa.club were deliberately NOT claimed as ANU surfaces.
+    endpoints:
+      - url: https://api.quantumnumbers.anu.edu.au/?length=4&type=uint8
+        status: 403
+        note: 'Current AQN service. {"message":"Forbidden"} without x-api-key — live and correctly gated. x-operator: institution.'
+      - url: https://quantumnumbers.anu.edu.au/documentation
+        status: 200
+        note: AQN parameter table and curl form, read from the Vue bundle. Source for the derived OpenAPI.
+      - url: https://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8
+        status: 200
+        note: 'Legacy endpoint. Returned {"type":"uint8","length":4,"data":[74,205,98,159],"success":true}. Deprecated by ANU.'
+      - url: https://qrng.anu.edu.au/contact/api-documentation/
+        status: 200
+        note: Carries ANU's own deprecation notice; also returns the throttle sentence at HTTP 200 when rate limited.
+      - url: https://openresearch-repository.anu.edu.au/server/oai/request?verb=Identify
+        status: 200
+        note: OAI-PMH 2.0. repositoryName "Open Research", earliest datestamp 2004-01-01, deletedRecord transient.
+      - url: https://openresearch-repository.anu.edu.au/server/oai/request?verb=ListMetadataFormats
+        status: 200
+        note: Twelve metadata prefixes — oai_dc, qdc, mods, mets, didl, ore, rdf, marc, xoai, dim, etdms, uketd_dc.
+      - url: https://openresearch-repository.anu.edu.au/server/api
+        status: 200
+        note: 'DSpace 7.6.7 HAL+JSON REST root, self-hosted (CNAME dspace-prod.anu.edu.au, 130.56.67.40). x-operator: institution.'
+      - url: https://openresearch-repository.anu.edu.au/server/api/core/items
+        status: 401
+        note: Genuinely access-controlled, not a uniformly open surface.
+      - url: https://idp2.anu.edu.au/idp/shibboleth
+        status: 200
+        note: 'SAML 2.0 IdP metadata, 14,896 bytes. entityID https://idp2.anu.edu.au/idp/shibboleth, scope anu.edu.au. NEW FIND.'
+      - url: https://md.aaf.edu.au/aaf-metadata.xml
+        status: 200
+        note: Australian Access Federation aggregate, 359 entities, three of them ANU's.
+      - url: https://researchportalplus.anu.edu.au/
+        status: 200
+        note: 'TENANT — Elsevier Pure. CNAME anu2-portal.elsevierpure.com. NOT saved as an ANU contract.'
+      - url: https://researchportalplus.anu.edu.au/ws/api
+        status: 404
+        note: Pure web-service path not exposed on this deployment; no tenant API reachable either.
+      - url: https://wattlecourses.anu.edu.au/mod/lti/certs.php
+        status: 200
+        note: Live LTI 1.3 JWKS (RS256, kid ca018582b9cd39583b18) on ANU's self-hosted Moodle. Conformance evidence only.
+      - url: https://wattlecourses.anu.edu.au/mod/lti/token.php
+        status: 400
+        note: '{"error":"invalid_request"} — live LTI token endpoint, not a soft 404.'
+      - url: https://api.datacite.org/prefixes/10.25911
+        status: 200
+        note: ANU DataCite provider `anu`, client `anu.repo`, 25,559 DOIs.
+      - url: https://api.crossref.org/members?query=Australian+National+University
+        status: 200
+        note: Crossref member 9402 exists but reports 0 deposited DOIs — recorded as non-conforming.
+      - url: https://datacommons.anu.edu.au/DataCommons/
+        status: 200
+        note: 'ANU Data Commons (CNAME dc-prod1.anu.edu.au). Web UI; no public REST or OAI path found (/rest/records 404, /oai 404).'
+      - url: https://api.anu.edu.au/
+        status: 000
+        note: NEGATIVE PROBE. Host does not resolve — there is no central institutional API gateway.
+      - url: https://developer.anu.edu.au/
+        status: 000
+        note: NEGATIVE PROBE. Host does not resolve — there is no developer portal.
+      - url: https://www.anu.edu.au/llms.txt
+        status: 404
+        note: NEGATIVE PROBE. No agent-directed content policy.
+      - url: https://www.anu.edu.au/.well-known/security.txt
+        status: 404
+        note: NEGATIVE PROBE. No RFC 9116 security contact.
+      - url: https://www.anu.edu.au/.well-known/openid-configuration
+        status: 404
+        note: NEGATIVE PROBE. No OIDC discovery document.
+      - url: https://services.anu.edu.au/information-technology/it-service-status
+        status: 404
+        note: NEGATIVE PROBE. No status page on the IT services portal.
+      - url: https://programsandcourses.anu.edu.au/api/
+        status: 200
+        note: 'SOFT 404 — redirects to /Error/Index/404. The catalog is a web UI with no public API.'
+      - url: https://nci.org.au/about-us/who-we-are
+        status: 200
+        note: DELIBERATE EXCLUSION. NCI describes itself as a multi-agency collaboration, not an ANU-operated facility.
   - date: '2026-06-03'
     rating: 2
     summary: >-

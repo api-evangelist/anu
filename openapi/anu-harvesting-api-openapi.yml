@@ -3,13 +3,7 @@ info:
   title: ANU Open Research OAI-PMH Harvesting API
   version: '2.0'
   summary: OAI-PMH 2.0 metadata harvesting endpoint for ANU's Open Research institutional repository.
-  description: 'ANU operates its institutional repository, Open Research, on self-hosted DSpace 7.6.7 at openresearch-repository.anu.edu.au (CNAME dspace-prod.anu.edu.au, 130.56.67.40 — ANU address space). The repository exposes a conformant OAI-PMH 2.0 harvesting interface. Confirmed by live Identify on 2026-08-19: repositoryName "Open Research", repositoryIdentifier openresearch-repository.anu.edu.au, adminEmail an anu.edu.au address, earliestDatestamp 2004-01-01, granularity YYYY-MM-DDThh:mm:ssZ, deletedRecord transient. Twelve metadata formats are offered: oai_dc, qdc, mods, mets, didl, ore, rdf, marc, xoai, dim, etdms and uketd_dc.
-
-
-    OPERATOR: institution. The software is open-source DSpace, but ANU runs the instance on ANU infrastructure under ANU''s own domain, and the OAI-PMH contract is an open community standard (OAI-PMH 2.0), not a vendor''s proprietary API. This is the case the university pipeline distinguishes from a SaaS tenancy: nobody else''s customers are served by this endpoint.
-
-
-    PROVENANCE: DERIVED by API Evangelist from the OAI-PMH 2.0 specification as instantiated by this endpoint, with every value below read from live Identify and ListMetadataFormats responses on 2026-08-19. ANU publishes no OpenAPI for it.'
+  description: ANU operates its institutional repository, Open Research, on self-hosted DSpace 7.6.7 at openresearch-repository.anu.edu.au (CNAME dspace-prod.anu.edu.au, 130.56.67.40 — ANU address space).
   contact:
     name: ANU Open Research
     email: genevieve.turner@anu.edu.au

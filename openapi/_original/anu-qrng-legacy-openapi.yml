@@ -1,0 +1,139 @@
+openapi: 3.1.0
+info:
+  title: QRNG@ANU Legacy JSON API
+  version: '0'
+  summary: The original ANU quantum random number endpoint. Deprecated in favour of the AQN API.
+  description: >-
+    The original QRNG@ANU JSON endpoint, served from ANU's own web host at qrng.anu.edu.au.
+    It requires no signup and is aggressively rate limited: ANU states "The QRNG API is
+    limited to 1 requests per minute", and the limit is enforced by returning that sentence
+    as a plain-text body with HTTP 200 rather than a 429.
+
+
+    ANU has published a deprecation notice on the documentation page itself: "To provide a
+    more reliable service, the QRNG@ANU API is now hosted on AWS platform... The old service
+    will be scaled back and eventually retired." No sunset date is given.
+
+
+    OPERATOR: institution. qrng.anu.edu.au resolves to 150.203.48.55, inside ANU's own
+    address space, under ANU's own registrable domain.
+
+
+    PROVENANCE: DERIVED by API Evangelist from ANU's published API documentation at
+    https://qrng.anu.edu.au/contact/api-documentation/, with the response envelope and the
+    rate-limit behaviour confirmed by live probe on 2026-08-19.
+  contact:
+    name: QRNG@ANU
+    email: qrng@anu.edu.au
+    url: https://qrng.anu.edu.au/contact/api-documentation/
+  termsOfService: https://www.anu.edu.au/disclaimer
+  x-operator: institution
+  x-provenance:
+    method: derived
+    generated: '2026-08-19'
+    source: https://qrng.anu.edu.au/contact/api-documentation/
+    probed: '2026-08-19'
+    derived_by: API Evangelist university pipeline
+  x-lifecycle:
+    status: deprecated
+    superseded_by: https://api.quantumnumbers.anu.edu.au
+    notice: https://qrng.anu.edu.au/contact/api-documentation/
+    sunset_date: null
+servers:
+  - url: https://qrng.anu.edu.au
+    description: ANU-hosted legacy service. Deprecated.
+tags:
+  - name: Random Numbers
+    description: Retrieval of quantum-generated random values.
+paths:
+  /API/jsonI.php:
+    get:
+      operationId: getLegacyQuantumRandomNumbers
+      summary: Request an array of quantum random numbers (legacy, deprecated)
+      deprecated: true
+      description: >-
+        Returns an array of quantum random values. No authentication. Limited to one request
+        per minute per client; over the limit the service returns HTTP 200 with a plain-text
+        message pointing at the AQN service, NOT a 429 and NOT a JSON body — callers must
+        check the content type, not the status code.
+      tags: [ Random Numbers ]
+      parameters:
+        - name: length
+          in: query
+          required: true
+          description: Number of values to return. Must be between 1 and 1024.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1024
+            examples: [ 10 ]
+        - name: type
+          in: query
+          required: true
+          description: >-
+            Data type. uint8 returns integers 0-255, uint16 returns integers 0-65535,
+            hex16 returns hexadecimal characters 00-ff assembled into blocks.
+          schema:
+            type: string
+            enum: [ uint8, uint16, hex16 ]
+            examples: [ uint8 ]
+        - name: size
+          in: query
+          required: false
+          description: Block size. Only needed for the hex16 data type. Must be between 1 and 1024.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1024
+            examples: [ 2 ]
+      responses:
+        '200':
+          description: >-
+            An array of quantum random values, OR — when the one-per-minute rate limit has
+            been tripped — a plain-text refusal served with the same 200 status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyQrngResponse'
+              examples:
+                uint8:
+                  summary: Live response captured 2026-08-19
+                  value:
+                    type: uint8
+                    length: 4
+                    data: [ 74, 205, 98, 159 ]
+                    success: true
+            text/html:
+              schema:
+                type: string
+              examples:
+                rateLimited:
+                  summary: Rate-limit refusal, served as HTTP 200
+                  value: >-
+                    The QRNG API is limited to 1 requests per minute. For more requests,
+                    please visit https://quantumnumbers.anu.edu.au or contact qrng@anu.edu.au.
+components:
+  schemas:
+    LegacyQrngResponse:
+      type: object
+      required: [ type, length, data, success ]
+      properties:
+        type:
+          type: string
+          enum: [ uint8, uint16, hex16 ]
+        length:
+          type: integer
+          minimum: 1
+          maximum: 1024
+        size:
+          type: integer
+          minimum: 1
+          maximum: 1024
+        data:
+          type: array
+          items:
+            oneOf:
+              - type: integer
+              - type: string
+        success:
+          type: boolean

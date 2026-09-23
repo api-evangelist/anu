@@ -1,0 +1,74 @@
+generated: '2026-08-19'
+method: derived
+source: openapi/anu-quantum-numbers-openapi.yml
+x-operator: institution
+note: >-
+  Vocabulary DERIVED by API Evangelist from ANU's own documented parameters, its live OAI-PMH
+  responses and its published SAML metadata. ANU publishes no vocabulary, glossary or data
+  dictionary of its own. Terms belonging to ANU's vendors are excluded — the Elsevier Pure
+  portal at researchportalplus.anu.edu.au has a rich vocabulary and none of it is ANU's.
+terms:
+- term: uint8
+  surface: quantum-numbers
+  definition: Data type returning unsigned 8-bit integers, values 0-255.
+  source: https://quantumnumbers.anu.edu.au/documentation
+- term: uint16
+  surface: quantum-numbers
+  definition: Data type returning unsigned 16-bit integers, values 0-65535.
+  source: https://quantumnumbers.anu.edu.au/documentation
+- term: hex8
+  surface: quantum-numbers
+  definition: Data type returning hexadecimal characters between 00 and ff. AQN service only.
+  source: https://quantumnumbers.anu.edu.au/documentation
+- term: hex16
+  surface: quantum-numbers
+  definition: Data type returning hexadecimal characters between 0000 and ffff.
+  source: https://quantumnumbers.anu.edu.au/documentation
+- term: block size
+  parameter: size
+  surface: quantum-numbers
+  definition: Number of bytes in each returned hexadecimal block. 1-10 on AQN, documented 1-1024 on the legacy endpoint.
+  source: https://quantumnumbers.anu.edu.au/documentation
+- term: array length
+  parameter: length
+  surface: quantum-numbers
+  definition: Number of values returned in a single call. 1-1024.
+  source: https://quantumnumbers.anu.edu.au/documentation
+- term: verb
+  surface: oai-pmh
+  definition: The OAI-PMH operation selector. One of Identify, ListMetadataFormats, ListSets, ListIdentifiers, ListRecords, GetRecord.
+  source: http://www.openarchives.org/OAI/openarchivesprotocol.html
+- term: metadataPrefix
+  surface: oai-pmh
+  definition: >-
+    Format in which records are disseminated. ANU Open Research supports oai_dc, qdc, mods,
+    mets, didl, ore, rdf, marc, xoai, dim, etdms and uketd_dc.
+  source: https://openresearch-repository.anu.edu.au/server/oai/request?verb=ListMetadataFormats
+- term: resumptionToken
+  surface: oai-pmh
+  definition: Continuation token for paging through an incomplete list response.
+  source: http://www.openarchives.org/OAI/openarchivesprotocol.html
+- term: OAI identifier
+  surface: oai-pmh
+  definition: 'Record identifier scheme for this repository: oai:openresearch-repository.anu.edu.au:1885/<id>. The 1885 handle prefix is ANU''s.'
+  source: https://openresearch-repository.anu.edu.au/server/oai/request?verb=Identify
+- term: entityID
+  surface: identity-federation
+  definition: 'SAML entity identifier for ANU''s identity provider: https://idp2.anu.edu.au/idp/shibboleth'
+  source: https://idp2.anu.edu.au/idp/shibboleth
+- term: scope
+  surface: identity-federation
+  definition: >-
+    The shibmd:Scope asserted by the ANU IdP — anu.edu.au. Scoped attributes issued to
+    federation partners are suffixed with it (e.g. eduPersonScopedAffiliation).
+  source: https://idp2.anu.edu.au/idp/shibboleth
+- term: AAF
+  surface: identity-federation
+  definition: >-
+    Australian Access Federation — the national SAML federation ANU belongs to, whose
+    aggregate metadata carries three ANU entities. AAF is an eduGAIN participant.
+  source: https://md.aaf.edu.au/aaf-metadata.xml
+- term: '10.25911'
+  surface: research-data
+  definition: ANU's DataCite DOI prefix, held by repository client anu.repo under provider anu. 25,559 DOIs registered.
+  source: https://api.datacite.org/prefixes/10.25911

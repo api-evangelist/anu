@@ -221,12 +221,6 @@ components:
             - type: string
         success:
           type: boolean
-    GatewayError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Gateway-level error message, e.g. "Forbidden".
     QuantumNumbersResponse:
       type: object
       required:
@@ -263,6 +257,12 @@ components:
         success:
           type: boolean
           description: True when the request was served.
+    GatewayError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Gateway-level error message, e.g. "Forbidden".
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
