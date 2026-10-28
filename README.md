@@ -1,4 +1,4 @@
-# Australian National University (anu)
+# Australian National University
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,91 +64,146 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-The Australian National University (ANU) is a public research university in Canberra and a member of the Group of Eight. This repository catalogs ANU's public developer/API footprint as an [APIs.json](https://apisjson.org) profile for the API Evangelist network.
+The Australian National University (ANU) is a public research university in Canberra and a member of the Group of Eight, ranked #27 in the QS World University Rankings order used by this cohort. Like almost every university, ANU is a federation of buyers rather than an API producer: it operates no central developer portal, no institutional API gateway (api.anu.edu.au and developer.anu.edu.au do not resolve), and publishes no OpenAPI for anything. What it does operate is small, real and genuinely its own — the ANU Quantum Numbers (AQN) service serving live quantum random numbers from the ANU Quantum Optics group, a deprecated predecessor endpoint at qrng.anu.edu.au throttled to one request per minute, a self-hosted DSpace 7.6.7 institutional repository exposing a conformant OAI-PMH 2.0 interface across twelve metadata formats plus a HAL+JSON REST API, and a Shibboleth identity provider registered in the Australian Access Federation and interfederated through eduGAIN. ANU is a DataCite member in its own right, holding DOI prefix 10.25911 with 25,559 registered DOIs. Its research information portal, by contrast, is an Elsevier Pure tenancy (researchportalplus.anu.edu.au CNAMEs to elsevierpure.com) — ANU's data on Elsevier's contract, recorded here as a tenant relationship and deliberately not credited as ANU engineering. Course, timetable and student systems are gated; the widely used ANU timetable tool is student-built by the Computer Science Students' Association on a non-ANU domain and is not endorsed on ANU's own timetabling pages.
 
-- APIs.json: https://raw.githubusercontent.com/api-evangelist/anu/refs/heads/main/apis.yml
-- Run with Naftiko: https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=anu-api-evangelist&utm_content=repo
+**Areas:** University · Higher Education · Education · Research · Australia · Group of Eight · Research Repository · Identity Federation · Open Access · Quantum · Random Numbers · OAI-PMH
 
-## Type
+## Australian National University on APIs.io
 
-- University (`x-type: university`) — Public Research University
-- Index / Consumer / 3rd-Party
+Everything profiled for Australian National University is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/anu/](https://apis.io/providers/anu/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (5)
 
-University, Higher Education, Education, Research, Australia, Group of Eight, Research Repository, Identity Federation, Open Access, Quantum, Random Numbers, OAI-PMH
+- [ANU Open Research DSpace REST API](https://apis.io/apis/anu/openresearch-rest/) — The HAL+JSON REST API of ANU's self-hosted DSpace 7.6.7 repository, reachable anonymously at /server/api for the root and discovery resources;…
+- [ANU Shibboleth Identity Provider (SAML 2.0 metadata)](https://apis.io/apis/anu/identity-federation/) — ANU's institutional identity provider, publishing machine-readable SAML 2.0 metadata at a stable URL. entityID https://idp2.anu.edu.au/idp/shibboleth,…
+- [ANU Research Portal Plus (Elsevier Pure) — TENANT](https://apis.io/apis/anu/research-portal-pure/) — ANU's research information portal and public researcher/output profiles, running on Elsevier Pure. This is a genuine institutional fact and one of the few…
+- [Australian National University Harvesting API](https://apis.io/apis/anu/anu-harvesting-api/) — OAI-PMH verbs for metadata harvesting.
+- [Australian National University Random Numbers API](https://apis.io/apis/anu/anu-random-numbers-api/) — Retrieval of quantum-generated random values.
 
-## Who operates what
+### Published properties
 
-A university is a federation of buyers, not an API producer. Every surface below carries an **operator**, settled by live probe on 2026-08-19 *before* anything was saved:
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-| Surface | Operator | Why |
-|---|---|---|
-| ANU Quantum Numbers (AQN) API | `institution` | `api.quantumnumbers.anu.edu.au` under ANU's domain, ANU's AWS account, ANU contact |
-| QRNG@ANU legacy JSON API | `institution` | `qrng.anu.edu.au` → 150.203.48.55, ANU address space |
-| ANU Open Research OAI-PMH | `institution` | `openresearch-repository.anu.edu.au` → `dspace-prod.anu.edu.au`, self-hosted DSpace |
-| ANU Open Research DSpace REST | `institution` | Same self-hosted instance; contract shape is upstream DSpace's, so no spec is saved |
-| ANU Shibboleth IdP (SAML metadata) | `institution` | Institution-operated by definition; registered in the AAF |
-| ANU Research Portal Plus | **`tenant`** | CNAMEs to `anu2-portal.elsevierpure.com`; `x-product: Pure Portal`. ANU's data, **Elsevier's contract** |
+#### JSON Schema (2)
 
-No Elsevier Pure specification is saved in this repository, and none of Elsevier's engineering is scored as ANU's.
+The data models the API reads and writes.
 
-## APIs
+- [ANU Quantum Numbers request parameters](https://apis.io/schemas/anu/anu-quantum-numbers-request/)
+- [ANU Quantum Numbers response](https://apis.io/schemas/anu/anu-quantum-numbers-response/)
 
-- **ANU Quantum Numbers (AQN) API** — current quantum RNG service. `uint8`/`uint16`/`hex8`/`hex16`, length 1–1024, free self-serve `x-api-key`. Docs: https://quantumnumbers.anu.edu.au/documentation — Base: `https://api.quantumnumbers.anu.edu.au`
-- **QRNG@ANU Legacy JSON API** — **deprecated**. No auth, throttled to **one request per minute**, and the throttle returns HTTP **200** with a plain-text sentence rather than a 429. Base: `https://qrng.anu.edu.au/API/jsonI.php`
-- **ANU Open Research OAI-PMH** — OAI-PMH 2.0, twelve metadata formats, records carrying ORCID iDs and DOIs under ANU's own DataCite prefix `10.25911`. Base: `https://openresearch-repository.anu.edu.au/server/oai/request`
-- **ANU Open Research DSpace REST API** — HAL+JSON, DSpace 7.6.7. Base: `https://openresearch-repository.anu.edu.au/server/api`
-- **ANU Shibboleth Identity Provider** — SAML 2.0 metadata, entityID `https://idp2.anu.edu.au/idp/shibboleth`, scope `anu.edu.au`, in the Australian Access Federation and eduGAIN. A login federation, not a developer authorization surface.
-- **ANU Research Portal Plus (Elsevier Pure)** — recorded as a **tenant relationship**, not an ANU API.
+#### JSON-LD (1)
 
-ANU publishes **no OpenAPI** for anything. Every specification under [`openapi/`](openapi/) is `derived` or `probed` by API Evangelist from ANU's own documentation and live responses, and is marked as such in `info.x-provenance`.
+Linked-data contexts for the provider's vocabulary.
 
-## Education-regime conformance
+- [Anu Context](https://apis.io/jsonld/anu/anu-context/)
 
-Probed against the Kin Score `education` regime standards — see [conformance/anu-conformance.yml](conformance/anu-conformance.yml):
+#### Examples (3)
 
-- **Conforming:** `oai-pmh` (2.0), `shibboleth`, `saml` (2.0), `lti` (1.3, live JWKS on ANU's self-hosted Moodle), `orcid`, `datacite` (prefix 10.25911, 25,559 DOIs)
-- **Not found:** `scim`, `oneroster`, `ed-fi`, `caliper`, `qti`, `crossref` (member 9402 exists with **0** deposited DOIs)
+Example requests and responses.
 
-## Artifacts
+- [Anu Qrng Legacy Uint8 Example](https://apis.io/examples/anu/anu-qrng-legacy-uint8-example/)
+- [Anu Quantum Numbers Forbidden Example](https://apis.io/examples/anu/anu-quantum-numbers-forbidden-example/)
+- [Anu Quantum Numbers Hex16 Example](https://apis.io/examples/anu/anu-quantum-numbers-hex16-example/)
 
-- OpenAPI: [openapi/](openapi/) (pristine copies in [openapi/_original/](openapi/_original/))
-- JSON Schema: [json-schema/](json-schema/) · Examples: [examples/](examples/) · Rules: [rules/](rules/) · Vocabulary: [vocabulary/](vocabulary/) · JSON-LD: [json-ld/](json-ld/)
-- Authentication: [authentication/](authentication/) · Scopes: [scopes/](scopes/) · Errors: [errors/](errors/) · Conformance: [conformance/](conformance/) · Lifecycle: [lifecycle/](lifecycle/)
-- Plans: [plans/anu-plans-pricing.yml](plans/anu-plans-pricing.yml) · Rate Limits: [rate-limits/anu-rate-limits.yml](rate-limits/anu-rate-limits.yml) · FinOps: [finops/anu-finops.yml](finops/anu-finops.yml) · Domain Security: [security/anu-domain-security.yml](security/anu-domain-security.yml)
+#### Governance rules (1)
 
-## Timestamps
+Spectral rulesets for the provider's contracts.
 
-- Created: 2026-06-03
-- Modified: 2026-08-19
+- [Australian National University API Rules](https://apis.io/rules/anu/anu-rules/)
 
-## Common Properties
+#### Security (2)
 
-- Website: https://www.anu.edu.au/
-- API Reference: https://quantumnumbers.anu.edu.au/documentation
-- Research repository: https://openresearch.anu.edu.au/
-- Open data / Data Commons: https://datacommons.anu.edu.au/DataCommons/
-- Course catalog: https://programsandcourses.anu.edu.au/
-- Identity federation: https://idp2.anu.edu.au/idp/shibboleth
-- AI policy: https://www.anu.edu.au/privacy/training-and-resources/generative-ai-and-data-governance
-- AI tooling guidance: https://libguides.anu.edu.au/generative-ai
-- GitHub: https://github.com/AustralianNationalUniversity · https://github.com/ANUcybernetics · https://github.com/anu-hpc
-- LinkedIn: https://www.linkedin.com/school/the-australian-national-university/
-- Review: [review.yml](review.yml)
+Authentication, trust centre, and vulnerability disclosure.
 
-## Notes and deliberate exclusions
+- [Anu Authentication](https://apis.io/security/anu/anu-authentication/)
+- [Anu Domain Security](https://apis.io/security/anu/anu-domain-security/)
 
-ANU operates **no central developer portal and no API gateway** — `api.anu.edu.au` and `developer.anu.edu.au` do not resolve. There is no `llms.txt`, no `.well-known/security.txt`, no OIDC discovery document, no status page and no changelog; each of those was confirmed by negative probe, not assumed.
+#### OAuth scopes (1)
 
-Three things were deliberately **not** claimed:
+The permissions the API asks for.
 
-- **NCI (nci.org.au)** — a national facility ANU collaborates in rather than operates. Its own "who we are" page describes a multi-agency collaboration, so its HPC surfaces are not credited to ANU.
-- **timetable.cssa.club** — a student-built timetable scrape on a non-institutional domain. No endorsement of it was found on ANU's own timetabling pages, so it is not credited even as a tenant.
-- **Wattle (Moodle) and library discovery** — behind authentication. Wattle is cited only as LTI 1.3 conformance evidence, not listed as a consumable API.
+- [Anu Scopes](https://apis.io/scopes/anu/anu-scopes/)
 
-No endpoints were invented. See [review.yml](review.yml) and `x-coverage` in [apis.yml](apis.yml) for per-URL verification status.
+#### Plans and pricing (1)
 
-## Maintainers
+Published plans, tiers and prices.
 
-- Kin Lane — kin@apievangelist.com
+- [Anu Plans Pricing](https://apis.io/plans/anu/anu-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Anu Rate Limits](https://apis.io/rate-limits/anu/anu-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Anu Finops](https://apis.io/finops/anu/anu-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.anu.edu.au/)
+- [Documentation](https://qrng.anu.edu.au/contact/api-documentation/)
+- [API reference](https://quantumnumbers.anu.edu.au/documentation)
+- [Support](https://services.anu.edu.au/information-technology)
+- [Blog](https://www.anu.edu.au/news)
+- [Terms of service](https://www.anu.edu.au/disclaimer)
+- [Privacy policy](https://www.anu.edu.au/privacy)
+- [GitHub](https://github.com/ANUcybernetics)
+
+## API Evangelist rating
+
+**Kin Score 39.0** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 71.4 |
+| Contract quality | 41.4 |
+| Contract governance | 11.4 |
+| Operational transparency | 18.4 |
+| Developer ergonomics | 28.6 |
+| Access clarity | 42.1 |
+
+**Agent readiness 24.5** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | na |
+| Error Semantics | — |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 42.2** — Education & Research
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/anu/](https://apis.io/providers/anu/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Australian National University: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/anu/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
